@@ -115,17 +115,19 @@ const RegressionSimulator = () => {
   };
   
   // Helper function: Matrix multiplication
-  const matrixMultiply = (A: number[][], B: number[][]) => {
+  const matrixMultiply = (A: number[][], B: number[][] | number[]) => {
     const rowsA = A.length;
     const colsA = A[0].length;
-    const colsB = B[0].length || 1;
+    const isMatrix = Array.isArray(B[0]);
+    const colsB = isMatrix ? (B[0] as number[]).length : 1;
     const result = Array(rowsA).fill(0).map(() => Array(colsB).fill(0));
     
     for (let i = 0; i < rowsA; i++) {
       for (let j = 0; j < colsB; j++) {
         let sum = 0;
         for (let k = 0; k < colsA; k++) {
-          sum += A[i][k] * (B[0].length ? B[k][j] : B[k]);
+          const bValue = isMatrix ? (B[k] as number[])[j] : (B[k] as number);
+          sum += A[i][k] * bValue;
         }
         result[i][j] = sum;
       }
